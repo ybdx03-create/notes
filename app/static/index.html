@@ -27,7 +27,11 @@
           class="new-note-button"
           onclick="document.querySelector('#title').focus()"
         >
-          + 新建笔记
+          <span class="new-note-icon" aria-hidden="true"></span>
+          <span class="new-note-copy">
+            <strong>写下新灵感</strong>
+            <span>一键唤醒纯净灵感页</span>
+          </span>
         </button>
         <div class="list-summary" role="list">
           <div class="summary-card" role="listitem">
@@ -79,7 +83,7 @@
             </div>
             <div class="editor-actions">
               <p class="form-feedback" role="alert" aria-live="polite"></p>
-              <button type="submit" class="primary-button">保存笔记</button>
+              <button type="submit" class="primary-button">收藏这则灵感</button>
             </div>
           </div>
         </form>
