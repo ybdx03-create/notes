@@ -44,7 +44,7 @@ class NotesAppTests(unittest.TestCase):
         return captured["status"], captured["headers"], response_body
 
     # ----------------------------------------------------------------- helpers
-    def _create_note(self, title: str = "테스트", content: str = "내용") -> dict:
+    def _create_note(self, title: str = "测试", content: str = "正文") -> dict:
         status, _, body = self.request(
             "POST",
             "/api/notes",
@@ -69,12 +69,12 @@ class NotesAppTests(unittest.TestCase):
 
     def test_update_note(self):
         created = self._create_note()
-        payload = json.dumps({"title": "수정", "content": "업데이트"}).encode("utf-8")
+        payload = json.dumps({"title": "修改", "content": "更新内容"}).encode("utf-8")
         status, _, body = self.request("PUT", f"/api/notes/{created['id']}", payload)
         self.assertEqual(status, 200)
         updated = json.loads(body)
-        self.assertEqual(updated["title"], "수정")
-        self.assertEqual(updated["content"], "업데이트")
+        self.assertEqual(updated["title"], "修改")
+        self.assertEqual(updated["content"], "更新内容")
 
     def test_delete_note(self):
         created = self._create_note()
@@ -90,12 +90,12 @@ class NotesAppTests(unittest.TestCase):
             json.dumps({"title": " ", "content": " "}).encode("utf-8"),
         )
         self.assertEqual(status, 400)
-        self.assertIn("제목을 입력해주세요.", json.loads(body)["error"])
+        self.assertIn("请填写标题。", json.loads(body)["error"])
 
         note = self._create_note()
         status, _, body = self.request("PUT", f"/api/notes/{note['id']}", b"{}")
         self.assertEqual(status, 400)
-        self.assertIn("제목을 입력해주세요.", json.loads(body)["error"])
+        self.assertIn("请填写标题。", json.loads(body)["error"])
 
 
 if __name__ == "__main__":

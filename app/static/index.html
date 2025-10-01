@@ -1,103 +1,79 @@
 <!doctype html>
-<html lang="ko">
+<html lang="zh-Hans">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Liquid Notes</title>
+    <title>流光笔记</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/css/style.css" />
   </head>
   <body>
     <div class="app-shell">
-      <aside class="sidebar" aria-label="앱 탐색">
-        <div class="sidebar-header">
-          <span class="brand-mark" aria-hidden="true"></span>
+      <aside class="list-panel" aria-label="笔记列表">
+        <header class="list-header">
+          <span class="brand-icon" aria-hidden="true"></span>
           <div>
-            <p class="brand-title">spring</p>
-            <p class="brand-subtitle">나의 노트 공간</p>
+            <p class="brand-title">流光笔记</p>
+            <p class="brand-tagline">轻盈、清晰、好用的记录空间</p>
           </div>
-        </div>
-        <dl class="sidebar-stats">
-          <div>
-            <dt>전체 노트</dt>
-            <dd id="total-notes">0</dd>
-          </div>
-          <div>
-            <dt>이번 주 작성</dt>
-            <dd id="weekly-notes">0</dd>
-          </div>
-          <div>
-            <dt>즐겨찾기</dt>
-            <dd>—</dd>
-          </div>
-        </dl>
-        <nav class="sidebar-menu">
-          <p class="menu-label">폴더</p>
-          <ul>
-            <li><button type="button" class="menu-item is-active">전체 기록</button></li>
-            <li><button type="button" class="menu-item">인사이트</button></li>
-            <li><button type="button" class="menu-item">링크 모음</button></li>
-            <li><button type="button" class="menu-item">회고</button></li>
-          </ul>
-        </nav>
-        <button type="button" class="sidebar-action" onclick="document.querySelector('#title').focus()">
-          + 새 노트 작성
+        </header>
+        <button
+          type="button"
+          class="new-note-button"
+          onclick="document.querySelector('#title').focus()"
+        >
+          + 新建笔记
         </button>
+        <div class="list-summary">
+          <p>共 <span id="total-notes">0</span> 条笔记</p>
+          <p>最近 7 天 <span id="weekly-notes">0</span> 条</p>
+        </div>
+        <div id="notes-list" class="notes-list" aria-live="polite">
+          <p class="empty-state">还没有任何内容，开始撰写第一条笔记吧。</p>
+        </div>
       </aside>
 
-      <main class="main-area">
-        <header class="main-header">
-          <div class="header-info">
-            <h1>오늘 무엇을 기록할까요?</h1>
-            <p>아이디어, 링크, 기억하고 싶은 순간들을 자유롭게 남겨보세요.</p>
-          </div>
-          <label class="search-field" for="note-search">
-            <input id="note-search" type="search" placeholder="노트 검색" disabled />
-          </label>
+      <main class="editor-panel">
+        <header class="editor-header">
+          <h1>今天想记录什么？</h1>
+          <p>在右侧的笔记卡片里同时完成标题与正文的创作。</p>
         </header>
 
-        <section class="composer-section">
-          <form id="note-form" class="note-form" autocomplete="off">
-            <div class="composer-card">
-              <div class="composer-textarea">
-                <div class="composer-metadata">
-                  <input
-                    id="title"
-                    name="title"
-                    type="text"
-                    placeholder="제목을 입력하세요"
-                    required
-                  />
-                  <time id="composer-time" aria-live="polite"></time>
-                </div>
-                <div class="composer-divider" role="presentation"></div>
-                <textarea
-                  id="content"
-                  name="content"
-                  rows="8"
-                  placeholder="내용을 입력하면 오른쪽 타임라인에 기록이 쌓입니다."
-                  required
-                ></textarea>
-              </div>
-              <div class="form-actions">
-                <p class="form-feedback" role="alert" aria-live="polite"></p>
-                <button type="submit" class="primary-button">기록 저장</button>
-              </div>
+        <form id="note-form" class="note-form" autocomplete="off">
+          <div class="editor-card">
+            <div class="editor-headline">
+              <label class="visually-hidden" for="title">标题</label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                placeholder="输入标题，概括这条灵感"
+                required
+              />
+              <time id="composer-time" aria-live="polite"></time>
             </div>
-          </form>
-        </section>
-
-        <section class="notes-feed" aria-live="polite">
-          <h2 class="visually-hidden">노트 타임라인</h2>
-          <div id="notes-list" class="timeline">
-            <p class="empty-state">첫 노트를 작성해 나만의 타임라인을 만들어보세요.</p>
+            <div class="editor-divider" role="presentation"></div>
+            <div class="editor-content">
+              <label class="visually-hidden" for="content">内容</label>
+              <textarea
+                id="content"
+                name="content"
+                rows="10"
+                placeholder="在这里写下完整的想法、待办或灵感摘录。"
+                required
+              ></textarea>
+            </div>
+            <div class="editor-actions">
+              <p class="form-feedback" role="alert" aria-live="polite"></p>
+              <button type="submit" class="primary-button">保存笔记</button>
+            </div>
           </div>
-        </section>
+        </form>
       </main>
     </div>
     <script src="/static/js/main.js" defer></script>

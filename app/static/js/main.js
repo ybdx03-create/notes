@@ -12,16 +12,16 @@ function noteTemplate(note) {
   article.dataset.id = note.id;
   article.innerHTML = `
     <header>
-      <h3></h3>
+      <h3 class="note-title"></h3>
       <time datetime="${note.updated_at}"></time>
     </header>
     <p class="note-body"></p>
     <footer>
-      <button type="button" class="icon-button" data-action="edit">수정</button>
-      <button type="button" class="icon-button" data-action="delete">삭제</button>
+      <button type="button" class="icon-button" data-action="edit">编辑</button>
+      <button type="button" class="icon-button" data-action="delete">删除</button>
     </footer>
   `;
-  article.querySelector('h3').textContent = note.title;
+  article.querySelector('.note-title').textContent = note.title;
   article.querySelector('time').textContent = formatDate(note.updated_at);
   article.querySelector('.note-body').textContent = note.content;
   return article;
@@ -29,7 +29,9 @@ function noteTemplate(note) {
 
 function formatDate(isoString) {
   const date = new Date(isoString);
-  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+    date.getDate(),
+  ).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 }
 
 async function fetchNotes() {
@@ -38,7 +40,7 @@ async function fetchNotes() {
   const notes = await response.json();
   notesList.innerHTML = '';
   if (!notes.length) {
-    notesList.innerHTML = '<p class="empty-state">첫 노트를 작성해 나만의 타임라인을 만들어보세요.</p>';
+    notesList.innerHTML = '<p class="empty-state">还没有任何内容，开始撰写第一条笔记吧。</p>';
     updateStats(notes);
     return;
   }
@@ -54,7 +56,7 @@ async function submitNote(event) {
   const content = form.content.value.trim();
 
   if (!title || !content) {
-    feedback.textContent = '제목과 내용을 모두 입력해주세요.';
+    feedback.textContent = '请同时填写标题和内容。';
     return;
   }
 
@@ -71,36 +73,36 @@ async function submitNote(event) {
   const data = response.status !== 204 ? await response.json() : null;
 
   if (!response.ok) {
-    feedback.textContent = data?.error || '요청 처리 중 오류가 발생했습니다.';
+    feedback.textContent = data?.error || '保存时出现问题，请稍后再试。';
     return;
   }
 
-  feedback.textContent = editingId ? '노트를 업데이트했어요.' : '새로운 노트를 저장했어요!';
+  feedback.textContent = editingId ? '笔记已更新。' : '新笔记已保存！';
   form.reset();
   editingId = null;
-  form.querySelector('.primary-button').textContent = '기록 저장';
+  form.querySelector('.primary-button').textContent = '保存笔记';
   await fetchNotes();
 }
 
 async function deleteNote(id) {
-  const confirmed = window.confirm('정말로 삭제하시겠어요?');
+  const confirmed = window.confirm('确定要删除这条笔记吗？');
   if (!confirmed) return;
   const response = await fetch(`/api/notes/${id}`, { method: 'DELETE' });
   if (response.ok) {
-    feedback.textContent = '노트를 삭제했어요.';
+    feedback.textContent = '笔记已删除。';
     await fetchNotes();
   }
 }
 
 function startEdit(noteCard) {
   const id = noteCard.dataset.id;
-  const title = noteCard.querySelector('h3').textContent;
+  const title = noteCard.querySelector('.note-title').textContent;
   const content = noteCard.querySelector('.note-body').textContent;
   form.title.value = title;
   form.content.value = content;
   editingId = id;
-  form.querySelector('.primary-button').textContent = '기록 수정';
-  feedback.textContent = '노트 수정 중입니다.';
+  form.querySelector('.primary-button').textContent = '更新笔记';
+  feedback.textContent = '正在编辑这条笔记。';
   form.title.focus();
 }
 
@@ -119,9 +121,11 @@ function updateStats(notes) {
 function refreshComposerTime() {
   if (!composerTime) return;
   const now = new Date();
-  composerTime.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} · ${
-    now.getFullYear()
-  }.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+  composerTime.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(
+    now.getMinutes(),
+  ).padStart(2, '0')} · ${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
+    now.getDate(),
+  ).padStart(2, '0')}`;
 }
 
 notesList?.addEventListener('click', (event) => {

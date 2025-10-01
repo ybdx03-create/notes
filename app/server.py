@@ -44,13 +44,13 @@ class NotesApp:
         if method == "GET" and path.startswith("/static/"):
             static_path = self._safe_static_path(path)
             if static_path is None:
-                return self._json({"error": "Resource not found"}, status="404 Not Found")
+                return self._json({"error": "未找到资源"}, status="404 Not Found")
             return self._serve_static(static_path)
 
         if path.startswith("/api/notes"):
             return self._handle_api(method, path, environ)
 
-        return self._json({"error": "Resource not found"}, status="404 Not Found")
+        return self._json({"error": "未找到资源"}, status="404 Not Found")
 
     # ---------------------------------------------------------- API handlers
     def _handle_api(self, method: str, path: str, environ: dict) -> Response:
@@ -61,44 +61,44 @@ class NotesApp:
             title = (payload.get("title") or "").strip()
             content = (payload.get("content") or "").strip()
             if not title:
-                return self._json({"error": "제목을 입력해주세요."}, status="400 Bad Request")
+                return self._json({"error": "请填写标题。"}, status="400 Bad Request")
             if not content:
-                return self._json({"error": "내용을 입력해주세요."}, status="400 Bad Request")
+                return self._json({"error": "请填写内容。"}, status="400 Bad Request")
             note = self._storage.create_note(title=title, content=content)
             return self._json(note, status="201 Created")
 
         note_id = self._extract_note_id(path)
         if note_id is None:
-            return self._json({"error": "Resource not found"}, status="404 Not Found")
+            return self._json({"error": "未找到资源"}, status="404 Not Found")
 
         if method == "GET":
             note = self._storage.get_note(note_id)
             if note is None:
-                return self._json({"error": "Resource not found"}, status="404 Not Found")
+                return self._json({"error": "未找到资源"}, status="404 Not Found")
             return self._json(note)
         if method == "PUT":
             payload = self._read_json(environ)
             title = (payload.get("title") or "").strip()
             content = (payload.get("content") or "").strip()
             if not title:
-                return self._json({"error": "제목을 입력해주세요."}, status="400 Bad Request")
+                return self._json({"error": "请填写标题。"}, status="400 Bad Request")
             if not content:
-                return self._json({"error": "내용을 입력해주세요."}, status="400 Bad Request")
+                return self._json({"error": "请填写内容。"}, status="400 Bad Request")
             note = self._storage.update_note(note_id, title=title, content=content)
             if note is None:
-                return self._json({"error": "Resource not found"}, status="404 Not Found")
+                return self._json({"error": "未找到资源"}, status="404 Not Found")
             return self._json(note)
         if method == "DELETE":
             deleted = self._storage.delete_note(note_id)
             if not deleted:
-                return self._json({"error": "Resource not found"}, status="404 Not Found")
+                return self._json({"error": "未找到资源"}, status="404 Not Found")
             return Response(
                 status="204 No Content",
                 headers=[("Content-Length", "0")],
                 body=b"",
             )
 
-        return self._json({"error": "Method not allowed"}, status="405 Method Not Allowed")
+        return self._json({"error": "不允许的请求方法"}, status="405 Method Not Allowed")
 
     # --------------------------------------------------------------- Helpers
     def _safe_static_path(self, path: str) -> Optional[Path]:
