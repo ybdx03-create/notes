@@ -1,3 +1,3 @@
-Flask==2.3.3
-Flask-SQLAlchemy==3.1.1
-psycopg2-binary==2.9.9
+# 기본 실행에는 추가 패키지가 필요하지 않습니다.
+# PostgreSQL을 사용하려면 psycopg 호환 드라이버를 설치하세요.
+# 예) pip install "psycopg[binary]" 또는 pip install psycopg2-binary

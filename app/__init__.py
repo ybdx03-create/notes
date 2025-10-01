@@ -1,34 +1,25 @@
-import os
-from flask import Flask
+"""Application factory for the Liquid Notes web app."""
+from __future__ import annotations
 
-from .database import db
+from pathlib import Path
+from typing import Optional
+
+from .server import NotesApp
+from .storage import create_storage
 
 
-def create_app() -> Flask:
-    app = Flask(__name__, static_folder="static", template_folder="templates")
+def create_app(database_url: Optional[str] = None) -> NotesApp:
+    """Create a fully configured WSGI application.
 
-    database_url = os.getenv("DATABASE_URL", "sqlite:///notes_dev.db")
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    Parameters
+    ----------
+    database_url:
+        Optional database connection string. When omitted the value is read
+        from the ``DATABASE_URL`` environment variable and defaults to a
+        SQLite file placed alongside the project directory. PostgreSQL URLs
+        are also supported when a ``psycopg`` compatible driver is available.
+    """
 
-    app.config.update(
-        SQLALCHEMY_DATABASE_URI=database_url,
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-    )
-
-    try:
-        os.makedirs(app.instance_path, exist_ok=True)  # type: ignore[arg-type]
-    except OSError:
-        pass
-
-    db.init_app(app)
-
-    with app.app_context():
-        from . import models  # noqa: F401
-        db.create_all()
-
-    from .routes import bp as routes_bp
-
-    app.register_blueprint(routes_bp)
-
-    return app
+    static_dir = Path(__file__).resolve().parent / "static"
+    storage = create_storage(database_url)
+    return NotesApp(storage=storage, static_root=static_dir)
