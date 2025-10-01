@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+notes_dev.db
+instance/
+.env
+.venv/
