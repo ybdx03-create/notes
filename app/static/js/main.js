@@ -40,7 +40,7 @@ async function fetchNotes() {
   const notes = await response.json();
   notesList.innerHTML = '';
   if (!notes.length) {
-    notesList.innerHTML = '<p class="empty-state">还没有任何内容，开始撰写第一条笔记吧。</p>';
+    notesList.innerHTML = '<p class="empty-state">还没有任何笔记，写下第一条灵感吧。</p>';
     updateStats(notes);
     return;
   }
@@ -73,23 +73,23 @@ async function submitNote(event) {
   const data = response.status !== 204 ? await response.json() : null;
 
   if (!response.ok) {
-    feedback.textContent = data?.error || '灵感收藏失败，请稍后再试。';
+    feedback.textContent = data?.error || '保存失败，请稍后再试。';
     return;
   }
 
-  feedback.textContent = editingId ? '灵感已焕新。' : '灵感已收藏！';
+  feedback.textContent = editingId ? '笔记已更新。' : '笔记已保存。';
   form.reset();
   editingId = null;
-  form.querySelector('.primary-button').textContent = '收藏这则灵感';
+  form.querySelector('.primary-button').textContent = '保存笔记';
   await fetchNotes();
 }
 
 async function deleteNote(id) {
-  const confirmed = window.confirm('确定要删除这则灵感吗？');
+  const confirmed = window.confirm('确定要删除这则笔记吗？');
   if (!confirmed) return;
   const response = await fetch(`/api/notes/${id}`, { method: 'DELETE' });
   if (response.ok) {
-    feedback.textContent = '灵感已删除。';
+    feedback.textContent = '笔记已删除。';
     await fetchNotes();
   }
 }
@@ -101,8 +101,8 @@ function startEdit(noteCard) {
   form.title.value = title;
   form.content.value = content;
   editingId = id;
-  form.querySelector('.primary-button').textContent = '更新这则灵感';
-  feedback.textContent = '正在微调这则灵感。';
+  form.querySelector('.primary-button').textContent = '更新笔记';
+  feedback.textContent = '正在编辑这则笔记。';
   form.title.focus();
 }
 
