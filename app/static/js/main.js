@@ -1,6 +1,9 @@
 const form = document.querySelector('#note-form');
 const notesList = document.querySelector('#notes-list');
 const feedback = document.querySelector('.form-feedback');
+const totalNotes = document.querySelector('#total-notes');
+const weeklyNotes = document.querySelector('#weekly-notes');
+const composerTime = document.querySelector('#composer-time');
 let editingId = null;
 
 function noteTemplate(note) {
@@ -12,7 +15,7 @@ function noteTemplate(note) {
       <h3></h3>
       <time datetime="${note.updated_at}"></time>
     </header>
-    <p></p>
+    <p class="note-body"></p>
     <footer>
       <button type="button" class="icon-button" data-action="edit">수정</button>
       <button type="button" class="icon-button" data-action="delete">삭제</button>
@@ -20,7 +23,7 @@ function noteTemplate(note) {
   `;
   article.querySelector('h3').textContent = note.title;
   article.querySelector('time').textContent = formatDate(note.updated_at);
-  article.querySelector('p').textContent = note.content;
+  article.querySelector('.note-body').textContent = note.content;
   return article;
 }
 
@@ -35,12 +38,14 @@ async function fetchNotes() {
   const notes = await response.json();
   notesList.innerHTML = '';
   if (!notes.length) {
-    notesList.innerHTML = '<p class="empty-state">아직 노트가 없습니다. 새로운 노트를 작성해보세요!</p>';
+    notesList.innerHTML = '<p class="empty-state">첫 노트를 작성해 나만의 타임라인을 만들어보세요.</p>';
+    updateStats(notes);
     return;
   }
   notes.forEach((note) => {
     notesList.appendChild(noteTemplate(note));
   });
+  updateStats(notes);
 }
 
 async function submitNote(event) {
@@ -73,7 +78,7 @@ async function submitNote(event) {
   feedback.textContent = editingId ? '노트를 업데이트했어요.' : '새로운 노트를 저장했어요!';
   form.reset();
   editingId = null;
-  form.querySelector('.primary-button').textContent = '노트 저장';
+  form.querySelector('.primary-button').textContent = '기록 저장';
   await fetchNotes();
 }
 
@@ -90,13 +95,33 @@ async function deleteNote(id) {
 function startEdit(noteCard) {
   const id = noteCard.dataset.id;
   const title = noteCard.querySelector('h3').textContent;
-  const content = noteCard.querySelector('p').textContent;
+  const content = noteCard.querySelector('.note-body').textContent;
   form.title.value = title;
   form.content.value = content;
   editingId = id;
-  form.querySelector('.primary-button').textContent = '노트 수정';
+  form.querySelector('.primary-button').textContent = '기록 수정';
   feedback.textContent = '노트 수정 중입니다.';
   form.title.focus();
+}
+
+function updateStats(notes) {
+  if (!totalNotes || !weeklyNotes) return;
+  totalNotes.textContent = notes.length;
+  const now = new Date();
+  const weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
+  const weeklyCount = notes.filter((note) => {
+    const updated = new Date(note.updated_at);
+    return updated >= weekAgo;
+  }).length;
+  weeklyNotes.textContent = weeklyCount;
+}
+
+function refreshComposerTime() {
+  if (!composerTime) return;
+  const now = new Date();
+  composerTime.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} · ${
+    now.getFullYear()
+  }.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
 }
 
 notesList?.addEventListener('click', (event) => {
@@ -116,4 +141,6 @@ notesList?.addEventListener('click', (event) => {
 
 form?.addEventListener('submit', submitNote);
 
+refreshComposerTime();
+setInterval(refreshComposerTime, 60 * 1000);
 fetchNotes();

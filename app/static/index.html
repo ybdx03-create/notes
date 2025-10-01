@@ -14,47 +14,91 @@
   </head>
   <body>
     <div class="app-shell">
-      <header class="app-header">
-        <h1 class="app-title">Liquid Notes</h1>
-        <p class="app-subtitle">맑고 유려한 경험으로 간편하게 노트를 정리하세요.</p>
-      </header>
-      <main>
-        <div class="workspace">
-          <section class="notes-panel" aria-live="polite">
-            <h2>나의 노트</h2>
-            <div id="notes-list" class="notes-grid">
-              <p class="empty-state">아직 노트가 없습니다. 새로운 노트를 작성해보세요!</p>
-            </div>
-          </section>
+      <aside class="sidebar" aria-label="앱 탐색">
+        <div class="sidebar-header">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <p class="brand-title">spring</p>
+            <p class="brand-subtitle">나의 노트 공간</p>
+          </div>
+        </div>
+        <dl class="sidebar-stats">
+          <div>
+            <dt>전체 노트</dt>
+            <dd id="total-notes">0</dd>
+          </div>
+          <div>
+            <dt>이번 주 작성</dt>
+            <dd id="weekly-notes">0</dd>
+          </div>
+          <div>
+            <dt>즐겨찾기</dt>
+            <dd>—</dd>
+          </div>
+        </dl>
+        <nav class="sidebar-menu">
+          <p class="menu-label">폴더</p>
+          <ul>
+            <li><button type="button" class="menu-item is-active">전체 기록</button></li>
+            <li><button type="button" class="menu-item">인사이트</button></li>
+            <li><button type="button" class="menu-item">링크 모음</button></li>
+            <li><button type="button" class="menu-item">회고</button></li>
+          </ul>
+        </nav>
+        <button type="button" class="sidebar-action" onclick="document.querySelector('#title').focus()">
+          + 새 노트 작성
+        </button>
+      </aside>
 
-          <section class="compose-panel">
-            <form id="note-form" class="note-form" autocomplete="off">
-              <div class="composer-card">
-                <div class="composer-field">
-                  <label for="title">제목</label>
-                  <input id="title" name="title" type="text" placeholder="오늘의 영감" required />
+      <main class="main-area">
+        <header class="main-header">
+          <div class="header-info">
+            <h1>오늘 무엇을 기록할까요?</h1>
+            <p>아이디어, 링크, 기억하고 싶은 순간들을 자유롭게 남겨보세요.</p>
+          </div>
+          <label class="search-field" for="note-search">
+            <input id="note-search" type="search" placeholder="노트 검색" disabled />
+          </label>
+        </header>
+
+        <section class="composer-section">
+          <form id="note-form" class="note-form" autocomplete="off">
+            <div class="composer-card">
+              <div class="composer-textarea">
+                <div class="composer-metadata">
+                  <input
+                    id="title"
+                    name="title"
+                    type="text"
+                    placeholder="제목을 입력하세요"
+                    required
+                  />
+                  <time id="composer-time" aria-live="polite"></time>
                 </div>
                 <div class="composer-divider" role="presentation"></div>
-                <div class="composer-field">
-                  <label for="content">내용</label>
-                  <textarea
-                    id="content"
-                    name="content"
-                    rows="8"
-                    placeholder="생각을 자유롭게 기록하세요"
-                    required
-                  ></textarea>
-                </div>
+                <textarea
+                  id="content"
+                  name="content"
+                  rows="8"
+                  placeholder="내용을 입력하면 오른쪽 타임라인에 기록이 쌓입니다."
+                  required
+                ></textarea>
               </div>
               <div class="form-actions">
                 <p class="form-feedback" role="alert" aria-live="polite"></p>
-                <button type="submit" class="primary-button">노트 저장</button>
+                <button type="submit" class="primary-button">기록 저장</button>
               </div>
-            </form>
-          </section>
-        </div>
+            </div>
+          </form>
+        </section>
+
+        <section class="notes-feed" aria-live="polite">
+          <h2 class="visually-hidden">노트 타임라인</h2>
+          <div id="notes-list" class="timeline">
+            <p class="empty-state">첫 노트를 작성해 나만의 타임라인을 만들어보세요.</p>
+          </div>
+        </section>
       </main>
-      <footer class="app-footer">Made with pure Python · PostgreSQL Ready</footer>
     </div>
     <script src="/static/js/main.js" defer></script>
   </body>
