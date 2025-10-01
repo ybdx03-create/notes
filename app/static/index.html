@@ -19,33 +19,40 @@
         <p class="app-subtitle">맑고 유려한 경험으로 간편하게 노트를 정리하세요.</p>
       </header>
       <main>
-        <section class="note-dashboard">
-          <form id="note-form" class="note-form" autocomplete="off">
-            <div class="glass-card">
-              <label for="title">제목</label>
-              <input id="title" name="title" type="text" placeholder="오늘의 영감" required />
-            </div>
-            <div class="glass-card">
-              <label for="content">내용</label>
-              <textarea
-                id="content"
-                name="content"
-                rows="5"
-                placeholder="생각을 자유롭게 기록하세요"
-                required
-              ></textarea>
-            </div>
-            <button type="submit" class="primary-button">노트 저장</button>
-            <p class="form-feedback" role="alert" aria-live="polite"></p>
-          </form>
-
-          <section class="notes-board" aria-live="polite">
+        <div class="workspace">
+          <section class="notes-panel" aria-live="polite">
             <h2>나의 노트</h2>
             <div id="notes-list" class="notes-grid">
               <p class="empty-state">아직 노트가 없습니다. 새로운 노트를 작성해보세요!</p>
             </div>
           </section>
-        </section>
+
+          <section class="compose-panel">
+            <form id="note-form" class="note-form" autocomplete="off">
+              <div class="composer-card">
+                <div class="composer-field">
+                  <label for="title">제목</label>
+                  <input id="title" name="title" type="text" placeholder="오늘의 영감" required />
+                </div>
+                <div class="composer-divider" role="presentation"></div>
+                <div class="composer-field">
+                  <label for="content">내용</label>
+                  <textarea
+                    id="content"
+                    name="content"
+                    rows="8"
+                    placeholder="생각을 자유롭게 기록하세요"
+                    required
+                  ></textarea>
+                </div>
+              </div>
+              <div class="form-actions">
+                <p class="form-feedback" role="alert" aria-live="polite"></p>
+                <button type="submit" class="primary-button">노트 저장</button>
+              </div>
+            </form>
+          </section>
+        </div>
       </main>
       <footer class="app-footer">Made with pure Python · PostgreSQL Ready</footer>
     </div>
