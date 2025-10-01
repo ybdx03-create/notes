@@ -13,13 +13,15 @@
     <link rel="stylesheet" href="/static/css/style.css" />
   </head>
   <body>
+    <div class="aura aura--one" aria-hidden="true"></div>
+    <div class="aura aura--two" aria-hidden="true"></div>
     <div class="app-shell">
       <aside class="list-panel" aria-label="笔记列表">
         <header class="list-header">
           <span class="brand-icon" aria-hidden="true"></span>
           <div>
             <p class="brand-title">流光笔记</p>
-            <p class="brand-tagline">轻盈、清晰、好用的记录空间</p>
+            <p class="brand-tagline">保持灵感流动、记录每一刻绿色心情</p>
           </div>
         </header>
         <button
@@ -29,9 +31,17 @@
         >
           + 新建笔记
         </button>
-        <div class="list-summary">
-          <p>共 <span id="total-notes">0</span> 条笔记</p>
-          <p>最近 7 天 <span id="weekly-notes">0</span> 条</p>
+        <div class="list-summary" role="list">
+          <div class="summary-card" role="listitem">
+            <p>总笔记</p>
+            <strong id="total-notes">0</strong>
+            <span>全部绿色灵感</span>
+          </div>
+          <div class="summary-card" role="listitem">
+            <p>最近 7 天</p>
+            <strong id="weekly-notes">0</strong>
+            <span>持续保持记录</span>
+          </div>
         </div>
         <div id="notes-list" class="notes-list" aria-live="polite">
           <p class="empty-state">还没有任何内容，开始撰写第一条笔记吧。</p>
@@ -40,8 +50,9 @@
 
       <main class="editor-panel">
         <header class="editor-header">
-          <h1>今天想记录什么？</h1>
-          <p>在右侧的笔记卡片里同时完成标题与正文的创作。</p>
+          <p class="editor-subheading">今日灵感</p>
+          <h1>在一张极光绿的纸上写下你的想法</h1>
+          <p>标题与内容在同一张卡片上自然衔接，随时保存、随地再看。</p>
         </header>
 
         <form id="note-form" class="note-form" autocomplete="off">

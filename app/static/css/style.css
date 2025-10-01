@@ -1,15 +1,18 @@
 :root {
   color-scheme: light;
-  --page-bg: linear-gradient(135deg, #dceeff 0%, #f9f9ff 60%, #ffffff 100%);
-  --panel-glass: rgba(255, 255, 255, 0.58);
-  --panel-border: rgba(255, 255, 255, 0.65);
-  --shadow-soft: 0 25px 60px rgba(61, 89, 119, 0.15);
-  --text-main: #1f2a37;
-  --text-muted: rgba(31, 42, 55, 0.6);
-  --accent: #2f8cf1;
-  --accent-strong: #1c6dd8;
-  --card-bg: rgba(255, 255, 255, 0.75);
-  --divider: rgba(31, 42, 55, 0.06);
+  --page-bg: radial-gradient(circle at 10% 10%, rgba(130, 255, 196, 0.9), rgba(255, 255, 255, 0.85)),
+    linear-gradient(140deg, #edfff4 0%, #f7fdfc 55%, #ffffff 100%);
+  --panel-glass: rgba(255, 255, 255, 0.7);
+  --panel-border: rgba(255, 255, 255, 0.6);
+  --shadow-soft: 0 25px 60px rgba(26, 92, 65, 0.14);
+  --text-main: #143423;
+  --text-muted: rgba(20, 52, 35, 0.65);
+  --accent: #22c56f;
+  --accent-strong: #009152;
+  --accent-soft: rgba(34, 197, 111, 0.12);
+  --card-bg: rgba(255, 255, 255, 0.78);
+  --divider: rgba(20, 52, 35, 0.08);
+  --frosted: rgba(255, 255, 255, 0.45);
   font-family: "Noto Sans SC", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -26,31 +29,56 @@ body {
   background: var(--page-bg);
   padding: clamp(1.5rem, 3vw, 3rem);
   color: var(--text-main);
+  position: relative;
+  overflow: hidden;
+}
+
+.aura {
+  position: absolute;
+  width: clamp(320px, 45vw, 560px);
+  height: clamp(320px, 45vw, 560px);
+  filter: blur(120px);
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.aura--one {
+  top: -160px;
+  left: -160px;
+  background: radial-gradient(circle, rgba(34, 197, 111, 0.8), transparent 60%);
+}
+
+.aura--two {
+  bottom: -200px;
+  right: -140px;
+  background: radial-gradient(circle, rgba(59, 221, 178, 0.75), transparent 65%);
 }
 
 .app-shell {
-  width: min(1120px, 100%);
-  min-height: 640px;
+  width: min(1160px, 100%);
+  min-height: 660px;
   display: grid;
-  grid-template-columns: minmax(260px, 320px) 1fr;
-  gap: 1.5rem;
+  grid-template-columns: minmax(260px, 330px) 1fr;
+  gap: 1.75rem;
   background: transparent;
+  position: relative;
+  z-index: 1;
 }
 
 .list-panel,
 .editor-panel {
   background: var(--panel-glass);
   border-radius: 28px;
-  padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  padding: clamp(1.6rem, 2.6vw, 2.4rem);
   border: 1px solid var(--panel-border);
   box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(26px);
+  backdrop-filter: blur(30px);
 }
 
 .list-panel {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.6rem;
 }
 
 .list-header {
@@ -60,16 +88,26 @@ body {
 }
 
 .brand-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(47, 140, 241, 0.9), rgba(108, 196, 255, 0.75));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  width: 48px;
+  height: 48px;
+  border-radius: 18px;
+  background: linear-gradient(160deg, #22c56f, #6ae4a5);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(34, 197, 111, 0.35);
+  position: relative;
+}
+
+.brand-icon::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.35);
+  filter: blur(2px);
 }
 
 .brand-title {
   margin: 0;
-  font-weight: 600;
+  font-weight: 650;
   font-size: 1.35rem;
 }
 
@@ -81,33 +119,63 @@ body {
 
 .new-note-button {
   border: none;
-  background: rgba(47, 140, 241, 0.12);
-  color: var(--accent-strong);
+  background: linear-gradient(120deg, #22c56f, #2dd4a3);
+  color: #04381f;
   font: inherit;
-  font-weight: 600;
+  font-weight: 650;
   border-radius: 18px;
-  padding: 0.8rem 1rem;
+  padding: 0.85rem 1.15rem;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 18px 35px rgba(34, 197, 111, 0.25);
 }
 
 .new-note-button:hover,
 .new-note-button:focus-visible {
-  background: rgba(47, 140, 241, 0.22);
   transform: translateY(-1px);
+  box-shadow: 0 22px 40px rgba(34, 197, 111, 0.32);
 }
 
 .list-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  font-size: 0.95rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.summary-card {
+  position: relative;
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(34, 197, 111, 0.14), rgba(34, 197, 111, 0.06));
+  box-shadow: inset 0 0 0 1px rgba(34, 197, 111, 0.1);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.summary-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.35), transparent 65%);
+  pointer-events: none;
+}
+
+.summary-card p {
+  margin: 0;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
-.list-summary span {
-  font-weight: 600;
+.summary-card strong {
+  font-size: 1.7rem;
+  font-weight: 650;
   color: var(--text-main);
+}
+
+.summary-card span {
+  font-size: 0.8rem;
+  color: rgba(20, 52, 35, 0.55);
 }
 
 .notes-list {
@@ -115,8 +183,19 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding-right: 0.25rem;
+  gap: 1.35rem;
+  padding: 0.5rem 0.25rem 0.5rem 0.75rem;
+  position: relative;
+}
+
+.notes-list::before {
+  content: "";
+  position: absolute;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  left: 0.5rem;
+  width: 2px;
+  background: linear-gradient(to bottom, rgba(34, 197, 111, 0.3), rgba(34, 197, 111, 0.05));
 }
 
 .notes-list::-webkit-scrollbar {
@@ -124,26 +203,42 @@ body {
 }
 
 .notes-list::-webkit-scrollbar-thumb {
-  background: rgba(31, 42, 55, 0.12);
+  background: rgba(20, 52, 35, 0.15);
   border-radius: 999px;
 }
 
 .empty-state {
   margin: 0;
-  padding: 1rem;
+  padding: 1rem 1.35rem;
   border-radius: 16px;
-  background: rgba(47, 140, 241, 0.06);
+  background: rgba(34, 197, 111, 0.08);
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .note-card {
-  background: var(--card-bg);
-  border-radius: 18px;
-  padding: 1rem;
+  position: relative;
+  margin-left: 1.6rem;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.9), rgba(226, 255, 239, 0.85));
+  border-radius: 20px;
+  padding: 1.1rem 1.2rem 1.15rem;
   border: 1px solid rgba(255, 255, 255, 0.7);
   display: grid;
-  gap: 0.65rem;
+  gap: 0.7rem;
+  box-shadow: 0 20px 45px rgba(12, 99, 63, 0.14);
+}
+
+.note-card::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22c56f, #2dd4a3);
+  border: 3px solid var(--frosted);
+  left: -2.6rem;
+  top: 1.2rem;
+  box-shadow: 0 10px 20px rgba(34, 197, 111, 0.25);
 }
 
 .note-card header {
@@ -163,63 +258,74 @@ body {
 
 .note-card time {
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: rgba(20, 52, 35, 0.6);
 }
 
 .note-body {
   margin: 0;
   color: var(--text-muted);
-  line-height: 1.55;
+  line-height: 1.6;
   white-space: pre-wrap;
 }
 
 .note-card footer {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .icon-button {
   border: none;
-  background: rgba(47, 140, 241, 0.12);
+  background: rgba(34, 197, 111, 0.12);
   color: var(--accent-strong);
   font: inherit;
   font-size: 0.9rem;
-  padding: 0.45rem 0.9rem;
+  padding: 0.45rem 1rem;
   border-radius: 14px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .icon-button:hover,
 .icon-button:focus-visible {
-  background: rgba(47, 140, 241, 0.2);
+  background: rgba(34, 197, 111, 0.2);
+  transform: translateY(-1px);
 }
 
 .editor-panel {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.6rem;
+}
+
+.editor-subheading {
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(20, 52, 35, 0.6);
 }
 
 .editor-header h1 {
-  margin: 0;
-  font-size: clamp(1.35rem, 2vw, 1.8rem);
-  font-weight: 600;
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.45rem, 2.4vw, 2rem);
+  font-weight: 650;
+  line-height: 1.35;
 }
 
 .editor-header p {
-  margin: 0.5rem 0 0;
+  margin: 0.75rem 0 0;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .editor-card {
-  background: var(--card-bg);
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  padding: clamp(1.25rem, 2vw, 1.75rem);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(219, 255, 234, 0.85));
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: clamp(1.4rem, 2.4vw, 1.9rem);
   display: grid;
-  gap: 1.25rem;
+  gap: 1.35rem;
+  box-shadow: 0 25px 55px rgba(11, 82, 58, 0.16);
 }
 
 .editor-headline {
@@ -231,24 +337,28 @@ body {
 .editor-headline input {
   flex: 1;
   border: none;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 16px;
-  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
+  padding: 0.9rem 1.1rem;
   font: inherit;
   font-size: 1.05rem;
   color: var(--text-main);
-  box-shadow: inset 0 0 0 1px rgba(31, 42, 55, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(20, 52, 35, 0.08);
 }
 
 .editor-headline input:focus {
-  outline: 2px solid rgba(47, 140, 241, 0.4);
+  outline: 2px solid rgba(34, 197, 111, 0.45);
   outline-offset: 2px;
 }
 
 .editor-headline time {
   font-size: 0.9rem;
-  color: var(--text-muted);
+  color: rgba(20, 52, 35, 0.55);
   white-space: nowrap;
+  padding: 0.55rem 0.85rem;
+  border-radius: 14px;
+  background: rgba(34, 197, 111, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(34, 197, 111, 0.12);
 }
 
 .editor-divider {
@@ -260,19 +370,19 @@ body {
   width: 100%;
   border: none;
   resize: vertical;
-  min-height: 220px;
-  border-radius: 18px;
-  padding: 1rem 1.15rem;
+  min-height: 240px;
+  border-radius: 20px;
+  padding: 1.05rem 1.25rem;
   font: inherit;
   font-size: 1rem;
-  line-height: 1.7;
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: inset 0 0 0 1px rgba(31, 42, 55, 0.05);
+  line-height: 1.75;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(20, 52, 35, 0.07);
   color: var(--text-main);
 }
 
 .editor-content textarea:focus {
-  outline: 2px solid rgba(47, 140, 241, 0.35);
+  outline: 2px solid rgba(34, 197, 111, 0.35);
   outline-offset: 2px;
 }
 
@@ -292,21 +402,21 @@ body {
 
 .primary-button {
   border: none;
-  background: linear-gradient(135deg, #2f8cf1, #70b5ff);
-  color: #fff;
+  background: linear-gradient(120deg, #22c56f, #31dba4);
+  color: #04381f;
   font: inherit;
-  font-weight: 600;
-  border-radius: 18px;
-  padding: 0.75rem 1.6rem;
+  font-weight: 650;
+  border-radius: 20px;
+  padding: 0.8rem 1.75rem;
   cursor: pointer;
-  box-shadow: 0 12px 32px rgba(47, 140, 241, 0.35);
+  box-shadow: 0 22px 48px rgba(34, 197, 111, 0.28);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .primary-button:hover,
 .primary-button:focus-visible {
   transform: translateY(-1px);
-  box-shadow: 0 18px 40px rgba(47, 140, 241, 0.4);
+  box-shadow: 0 26px 56px rgba(34, 197, 111, 0.32);
 }
 
 .visually-hidden {
@@ -328,7 +438,7 @@ body {
 
   .list-panel {
     order: 2;
-    max-height: 280px;
+    max-height: 320px;
   }
 
   .editor-panel {
