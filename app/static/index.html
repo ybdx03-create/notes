@@ -14,74 +14,84 @@
   </head>
   <body>
     <div class="app-shell">
-      <aside class="list-panel" aria-label="笔记列表">
-        <div class="panel-header">
-          <div class="brand-block">
-            <span class="brand-icon" aria-hidden="true"></span>
-            <div class="brand-meta">
-              <p class="brand-name">流光笔记</p>
-              <p class="brand-slogan">纯净而灵动的灵感库</p>
+      <aside class="sidebar" aria-label="笔记集">
+        <header class="sidebar-header">
+          <div class="brand">
+            <span class="brand-symbol" aria-hidden="true"></span>
+            <div>
+              <p class="brand-title">流光笔记</p>
+              <p class="brand-subtitle">绿色灵感的留白空间</p>
             </div>
           </div>
-          <button
-            type="button"
-            class="create-note-button"
-            onclick="document.querySelector('#title').focus()"
-          >
-            <span class="create-note-icon" aria-hidden="true">+</span>
-            <span class="create-note-copy">立即写笔记</span>
-          </button>
-          <dl class="stats-grid" role="list">
+          <p class="sidebar-hint">在宁静的白色背景上，让灵感流入左侧的收藏与右侧的书写台。</p>
+          <dl class="sidebar-stats" role="list">
             <div role="listitem">
-              <dt>全部</dt>
+              <dt>灵感总数</dt>
               <dd id="total-notes">0</dd>
-              <small>保存的灵感</small>
             </div>
             <div role="listitem">
-              <dt>近 7 天</dt>
+              <dt>近七日</dt>
               <dd id="weekly-notes">0</dd>
-              <small>持续记录</small>
             </div>
           </dl>
+        </header>
+        <div class="sidebar-actions">
+          <button
+            type="button"
+            class="pill-action"
+            onclick="document.querySelector('#title').focus()"
+          >
+            <span aria-hidden="true">＋</span>
+            <span>开始一条灵感</span>
+          </button>
         </div>
-        <div id="notes-list" class="notes-scroll" aria-live="polite">
-          <p class="empty-state">还没有任何笔记，写下第一条灵感吧。</p>
+        <div id="notes-list" class="notes-list" aria-live="polite">
+          <p class="empty-state">还没有记录。写下第一缕灵感，让面板焕然一新。</p>
         </div>
       </aside>
 
-      <main class="editor-panel">
-        <header class="editor-intro">
-          <p class="intro-eyebrow">今日写作</p>
-          <h1>一张清爽的笔记纸</h1>
-          <p>标题和正文保留在同一张卡片内，保存后即可在左侧列表中快速浏览。</p>
+      <main class="workspace">
+        <header class="workspace-hero">
+          <div>
+            <p class="hero-eyebrow">今日写作状态</p>
+            <h1>绿意流光写作台</h1>
+            <p>标题与正文保存在同一张浮光玻璃中，安静又清爽。</p>
+          </div>
+          <button
+            type="button"
+            class="ghost-action"
+            onclick="document.querySelector('#title').focus()"
+          >
+            聚焦写作
+          </button>
         </header>
 
         <form id="note-form" class="note-form" autocomplete="off">
-          <section class="editor-card">
-            <div class="editor-heading">
+          <section class="composer">
+            <div class="composer-header">
               <label class="visually-hidden" for="title">标题</label>
               <input
                 id="title"
                 name="title"
                 type="text"
-                placeholder="写下标题"
+                placeholder="在这里写下标题与主要想法"
                 required
               />
               <time id="composer-time" aria-live="polite"></time>
             </div>
-            <div class="editor-body">
+            <div class="composer-body">
               <label class="visually-hidden" for="content">内容</label>
               <textarea
                 id="content"
                 name="content"
                 rows="10"
-                placeholder="继续记录想法、任务或灵感细节。"
+                placeholder="继续扩展你的灵感、待办或要点，让整张卡片保持呼吸感。"
                 required
               ></textarea>
             </div>
-            <footer class="editor-footer">
+            <footer class="composer-footer">
               <p class="form-feedback" role="alert" aria-live="polite"></p>
-              <button type="submit" class="primary-button">保存笔记</button>
+              <button type="submit" class="primary-button">完成记录</button>
             </footer>
           </section>
         </form>
