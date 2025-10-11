@@ -215,3 +215,40 @@ uvicorn app.main:app --reload
    ```
 
 응답에 생성한 노트와 연결된 인사이트가 포함되면 백엔드 동작을 정상적으로 확인한 것입니다.
+
+### 웹 브라우저(FastAPI 문서)에서 직접 확인하기
+현재 레포지토리는 전용 프론트엔드 UI가 포함돼 있지 않지만, FastAPI가 자동으로 제공하는 Swagger UI를 통해 브라우저에서 동일한 흐름을 체험할 수 있습니다.
+
+1. **서버 실행**
+   ```bash
+   # 가상환경(선택) 활성화 후 의존성 설치
+   pip install -e .[dev]
+
+   # 환경 변수 설정 (PostgreSQL을 사용한다면 DATABASE_URL만 적절히 교체)
+   export DATABASE_URL="sqlite+aiosqlite:///./notes.db"  # 빠른 확인용 예시
+   export SECRET_KEY="dev-secret"
+   export ACCESS_TOKEN_EXPIRE_MINUTES="60"
+
+   # 서버 기동
+   uvicorn app.main:app --reload
+   ```
+
+2. **브라우저 열기**
+   - 로컬 PC 브라우저에서 `http://localhost:8000/docs`로 접속합니다.
+   - 상단의 **Authorize** 버튼을 통해 인증 토큰을 입력하면 이후 요청이 자동으로 보호됩니다.
+
+3. **계정 생성 & 로그인**
+   - `POST /api/auth/register` 항목에서 **Try it out** → 필요한 필드를 채운 뒤 **Execute**로 회원가입합니다.
+   - `POST /api/auth/login` 항목에서 로그인하고 응답 JSON의 `access_token` 값을 복사합니다.
+   - **Authorize** 버튼을 눌러 `Bearer <access_token>` 형식으로 토큰을 붙여넣고 **Authorize** → **Close**를 클릭합니다.
+
+4. **노트 및 대화 플로우 체험**
+   - `POST /api/notes`로 노트를 생성하고, `GET /api/notes`로 목록을 확인합니다.
+   - `POST /api/conversations/import`로 샘플 대화를 업로드합니다.
+   - `POST /api/conversations/notes/{note_id}/insights`로 대화 인사이트를 노트에 연결합니다.
+   - `GET /api/notes`의 쿼리 파라미터(`tags`, `search`)를 활용해 필터링 결과를 확인합니다.
+
+5. **데이터베이스 교체 (선택 사항)**
+   - PostgreSQL 18이 준비돼 있다면, `DATABASE_URL`을 `postgresql+psycopg://<USER>:<PASSWORD>@localhost:5432/notes`와 같이 교체 후 서버를 재시작하면 실제 운영용 DB로 동일한 흐름을 검증할 수 있습니다.
+
+이 과정을 통해 API가 반환하는 JSON과 상태 코드를 눈으로 직접 확인할 수 있으며, 노트·태그·대화 인사이트 기능이 의도한 대로 작동하는지 브라우저만으로 검증할 수 있습니다.
