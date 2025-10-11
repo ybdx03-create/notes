@@ -161,3 +161,57 @@ pytest
 ```
 
 테스트는 SQLite 임시 데이터베이스로 실행되며 사용자 등록, 노트 CRUD, 대화 인사이트 흐름을 검증합니다.
+
+### 수동 검증 절차
+필요한 환경 변수를 설정하고 개발 서버를 실행한 뒤 아래와 같이 REST 호출을 순차적으로 수행하면 전체 플로우를 확인할 수 있습니다.
+
+```bash
+export DATABASE_URL="postgresql+psycopg://<USER>:<PASSWORD>@localhost:5432/notes"
+export SECRET_KEY="dev-secret"
+export ACCESS_TOKEN_EXPIRE_MINUTES="60"
+
+uvicorn app.main:app --reload
+```
+
+별도의 터미널에서 다음 명령을 실행합니다.
+
+1. **회원 가입**
+   ```bash
+   curl -X POST http://localhost:8000/api/auth/register \
+     -H "Content-Type: application/json" \
+     -d '{"email": "demo@example.com", "password": "P@ssw0rd", "full_name": "데모"}'
+   ```
+2. **로그인 및 토큰 획득**
+   ```bash
+   TOKEN=$(curl -X POST http://localhost:8000/api/auth/login \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d 'username=demo%40example.com&password=P%40ssw0rd' | jq -r '.access_token')
+   ```
+3. **노트 생성**
+   ```bash
+   curl -X POST http://localhost:8000/api/notes \
+     -H "Authorization: Bearer ${TOKEN}" \
+     -H "Content-Type: application/json" \
+     -d '{"title": "생성형 AI 회의록", "content": "핵심 요약", "tags": ["ai", "meeting"]}'
+   ```
+4. **AI 대화 업로드**
+   ```bash
+   curl -X POST http://localhost:8000/api/conversations/import \
+     -H "Authorization: Bearer ${TOKEN}" \
+     -H "Content-Type: application/json" \
+     -d '{"source": "chatgpt", "chunks": [{"role": "user", "content": "하나의 문장 안에 여러 질문이 있어요"}, {"role": "assistant", "content": "질문을 분리하고 요약해 드릴게요"}]}'
+   ```
+5. **인사이트를 노트에 연결**
+   ```bash
+   curl -X POST http://localhost:8000/api/conversations/notes/1/insights \
+     -H "Authorization: Bearer ${TOKEN}" \
+     -H "Content-Type: application/json" \
+     -d '{"thread_id": 1, "summary": "대화 요약", "key_questions": ["핵심 질문"], "action_items": ["후속 조치"]}'
+   ```
+6. **노트 검색**
+   ```bash
+   curl -X GET 'http://localhost:8000/api/notes?tags=ai&search=핵심' \
+     -H "Authorization: Bearer ${TOKEN}"
+   ```
+
+응답에 생성한 노트와 연결된 인사이트가 포함되면 백엔드 동작을 정상적으로 확인한 것입니다.
